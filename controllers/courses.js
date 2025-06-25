@@ -1,16 +1,17 @@
-const db = require("../db")
+const courseService = require("../services/courseService");
 
-async function handleCursos(req, res) {
-  if (req.method === "GET") {
+async function getCourses(req, res) {
+  try {
+    const courses = await courseService.findAll();
+
     res.writeHead(200, { "Content-Type": "application/json" });
-    const query = 'SELECT * FROM users';
-    const result = await db.query(query);
-    console.log(result);
-    res.end(JSON.stringify({ message: "GET /cursos OK" }));
-  } else {
-    res.writeHead(405, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Método no permitido" }));
+    res.end(JSON.stringify(courses));
+  } catch (error) {
+    console.error("Error getting courses:", error);
+
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Internal server error" }));
   }
 }
 
-module.exports = { handleCursos };
+module.exports = { getCourses };
