@@ -1,7 +1,7 @@
-const { handleCursos } = require("../controllers/cursos");
+const { handleCursos } = require("../controllers/courses.js");
 
 function router(req, res) {
-  if (req.pathname.startsWith("/cursos")) {
+  if (req.pathname.startsWith("/courses")) {
     return handleCursos(req, res);
   }
 
