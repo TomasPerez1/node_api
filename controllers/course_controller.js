@@ -1,11 +1,10 @@
-const { findAll } = require("../services/course_service");
+const { findAll, createCourse } = require("../services/course_service");
 const { getBody } = require("../routes/utils")
 const { isValidPostCourseData } = require("../routes/validators/courses")
 
 async function getCourses(req, res) {
   try {
     const courses = await findAll();
-    // se recibe y se retorna como JSON y se re
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(courses));
   } catch (error) {
@@ -25,7 +24,7 @@ async function postCourse(req, res) {
       throw new Error(message);
     }
 
-    // Llamada al modelo para insertar el curso
+    await createCourse(body);
 
     res.writeHead(201, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: "Curso creado con éxito" }));
