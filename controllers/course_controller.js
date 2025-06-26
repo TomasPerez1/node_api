@@ -28,6 +28,7 @@ async function postCourse(req, res) {
       // Puedes procesar el cuerpo aquí, por ejemplo, analizarlo si es JSON
       const parsedBody = JSON.parse(body);
       // validate body
+      
       console.log('Cuerpo parseado (JSON):', parsedBody.name);
       res.writeHead(200, {'Content-Type': "application/json"});
       res.end('Datos recibidos y procesados');
