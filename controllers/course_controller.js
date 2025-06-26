@@ -1,4 +1,6 @@
 const { findAll } = require("../services/course_service");
+const { getBody } = require("../routes/utils")
+const { isValidPostCourseData } = require("../routes/validators/courses")
 
 async function getCourses(req, res) {
   try {
@@ -16,36 +18,24 @@ async function getCourses(req, res) {
 
 async function postCourse(req, res) {
   try {
-    // const courses = await findAll();
-    let body = '';
-    req.on('data', chunk => {
-      body += chunk.toString(); // Convierte el chunk a string y lo concatena
-    });
+    const body = await getBody(req);
 
-    req.on('end', () => {
-      // Aquí `body` contiene el cuerpo completo de la solicitud como una cadena
-      console.log('Cuerpo de la solicitud:', body);
-      // Puedes procesar el cuerpo aquí, por ejemplo, analizarlo si es JSON
-      const parsedBody = JSON.parse(body);
-      // validate body
-      
-      console.log('Cuerpo parseado (JSON):', parsedBody.name);
-      res.writeHead(200, {'Content-Type': "application/json"});
-      res.end('Datos recibidos y procesados');
-    
-      // console.error('Error al analizar el JSON:', error);
-      // res.writeHead(400, {'Content-Type': 'text/plain'});
-      // res.end('Error al procesar los datos');
-    })
-    // console.log(req);
-    // res.writeHead(200, { "Content-Type": "application/json" });
-    // res.end(JSON.stringify("FUNCIONA"));
+    const {is_valid, message} = isValidPostCourseData(body);
+    if (!is_valid) {
+      throw new Error(message);
+    }
+
+    // Llamada al modelo para insertar el curso
+
+    res.writeHead(201, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Curso creado con éxito" }));
   } catch (error) {
-    console.error("Error getting courses:", error);
+    console.error("Error en postCourse:", error.message);
 
-    res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ error: "Internal server error" }));
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: error.message }));
   }
 }
+
 
 module.exports = { getCourses, postCourse };
