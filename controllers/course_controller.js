@@ -1,8 +1,8 @@
-const courseService = require("../services/courseService");
+const { findAll } = require("../services/course_service");
 
 async function getCourses(req, res) {
   try {
-    const courses = await courseService.findAll();
+    const courses = await findAll();
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify(courses));

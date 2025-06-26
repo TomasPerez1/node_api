@@ -1,4 +1,4 @@
-const { getCourses } = require("../controllers/courses.js");
+const { getCourses } = require("../controllers/course_controller.js");
 
 function router(req, res) {
   if (req.method === "GET" && req.pathname === "/courses") {
