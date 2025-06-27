@@ -18,4 +18,25 @@ function isValidPostCourseData(body) {
 
 }
 
-module.exports = { isValidPostCourseData }
+
+function isValidPutCourseData(body) {
+  
+  const { name, description, capacity } = body;
+  console.log("is valid",name)
+  
+  if (name && !isValidStr({str: name, min_length: 4, max_length: 20})) {
+    // estructurar el error
+    return {is_valid: false, message: "invalid name"}
+  }
+  if (description && !isValidStr({str: description, min_length: 20, max_length: 120})) {
+    return {is_valid: false, message: "invalid description"}
+  }
+  if (capacity && !isValidInt({int: capacity, max: 50})) {
+    return {is_valid: false, message: "invalid capacity"}
+  }
+
+  return {is_valid: true, message: "ok"}
+
+}
+
+module.exports = { isValidPostCourseData, isValidPutCourseData }

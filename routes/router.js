@@ -1,19 +1,24 @@
-const { getCourses, postCourse } = require("../controllers/course_controller.js");
+const { getCourses, getCourseById, postCourse, putCourse } = require("../controllers/course_controller.js");
 
 function router(req, res) {
-  if (req.pathname === "/courses") {
+  const path = req.pathname;
+
+  if (path === "/courses") {
     if (req.method === "GET") {
       return getCourses(req, res);
-    }
-    else if (req.method === "POST") {
+    } else if (req.method === "POST") {
       return postCourse(req, res);
     }
-    // else if (req.method === "PUT") {
-    //   return postCourse(req, res);
-    // }
-    // else if (req.method === "DELETE") {
-    //   return postCourse(req, res);
-    // }
+  }
+
+  if (path.startsWith("/courses/")) {
+    if (req.method === "GET") {
+      return getCourseById(req, res);
+    }
+    
+    if (req.method === "PUT") {
+      return putCourse(req, res);
+    }
   }
 
   res.writeHead(404, { "Content-Type": "application/json" });

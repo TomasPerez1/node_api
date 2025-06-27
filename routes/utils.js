@@ -26,4 +26,21 @@ function getBody(req) {
   });
 }
 
-module.exports = { setHeader, getBody }
+function getIdParam({req, basePath}) {
+  const pathParts = req.pathname.split("/").filter(Boolean); // quita strings vacíos
+
+  // Verificamos que la ruta tenga al menos dos segmentos y coincida con la base
+  if (pathParts[0] !== basePath.replace("/", "") || !pathParts[1]) {
+    throw new Error("Invalid or missing ID in URL");
+  }
+
+  const id = parseInt(pathParts[1], 10);
+
+  if (isNaN(id) || id <= 0) {
+    throw new Error("ID must be a valid positive integer");
+  }
+
+  return id;
+}
+
+module.exports = { setHeader, getBody, getIdParam }
