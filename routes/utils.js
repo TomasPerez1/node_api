@@ -3,6 +3,12 @@ function setHeader(req, res) {
   res.writeHead(200, { "Content-Type": "application/json" });
 }
 
+function sendJSON(res, statusCode, data) {
+  res.writeHead(statusCode, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(data));
+}
+
+
 function getBody(req) {
   return new Promise((resolve, reject) => {
     let body = "";
@@ -27,9 +33,8 @@ function getBody(req) {
 }
 
 function getIdParam({req, basePath}) {
-  const pathParts = req.pathname.split("/").filter(Boolean); // quita strings vacíos
+  const pathParts = req.pathname.split("/").filter(Boolean); 
 
-  // Verificamos que la ruta tenga al menos dos segmentos y coincida con la base
   if (pathParts[0] !== basePath.replace("/", "") || !pathParts[1]) {
     throw new Error("Invalid or missing ID in URL");
   }
@@ -43,4 +48,4 @@ function getIdParam({req, basePath}) {
   return id;
 }
 
-module.exports = { setHeader, getBody, getIdParam }
+module.exports = { setHeader, sendJSON, getBody, getIdParam }

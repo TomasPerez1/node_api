@@ -1,53 +1,46 @@
 const db = require("../db");
+const { isValidInt } = require("../utils");
 
 async function findAll() {
-  try {
-    const query = "SELECT * FROM courses ORDER BY id ASC";
-    const result = await db.query(query);
-    return result.rows;
-  } catch (error) {
-    console.log(error)
-    throw new Error(error.message || "Internal server error");
-  }
+  const query = "SELECT * FROM courses ORDER BY id ASC";
+  const result = await db.query(query);
+  return result.rows;
 }
 
 async function findCourse(id) {
-  try {
-    const query = `
-      SELECT * FROM courses
-      WHERE id = $1
-    `;
-    const values = [id];
+
+  const query = `
+    SELECT * FROM courses
+    WHERE id = $1
+  `;
+  const values = [id];
+
+  const result = await db.query(query, values);
   
-    const result = await db.query(query, values);
-    return result.rows[0];
+  return result.rows[0]; 
   
-  } catch (error) {
-    console.log(error)
-    throw new Error(error.message || "Internal server error");
-  }
 }
 
 
 async function createCourse({ name, description, capacity }) {
-  try {
-    const query = `
-      INSERT INTO courses (name, description, capacity)
-      VALUES ($1, $2, $3)
-      RETURNING *;
-    `;
-    const values = [name, description || null, capacity];
+  const query = `
+    INSERT INTO courses (name, description, capacity)
+    VALUES ($1, $2, $3)
+    RETURNING *;
+  `;
+  const values = [name, description || null, capacity];
+
+  const result = await db.query(query, values);
+  return result.rows[0];
   
-    const result = await db.query(query, values);
-    return result.rows[0];
-  } catch (error) {
-    console.log(error)
-    throw new Error(error.message || "Internal server error");
-  }
 }
 
 async function updateCourse({id, data}) {
-  try {
+  
+    if(!isValidInt(id)) {
+      throw new Error("Invalide ID type");
+    }
+
     const { name, description, capacity } = data;
   
     const fields = [];
@@ -81,23 +74,24 @@ async function updateCourse({id, data}) {
     const result = await db.query(query, values);
     return result.rows[0];
     
-  } catch (error) {
-    console.log(error)
-    throw new Error(error.message || "Internal server error");
-  }
+  
 }
 
 async function deleteCourseById(id) {
-  const query = `
+    const query = `
     DELETE FROM courses
     WHERE id = $1
     RETURNING *;
-  `;
+    `;
 
-  const values = [id];
+    if(!isValidInt(id)) {
+      throw new Error("Invalide ID type");
+    }
 
-  const result = await db.query(query, values);
-  return result.rows[0]; // si no existía, devuelve undefined
+    const values = [id];
+
+    const result = await db.query(query, values);
+    return result.rows[0]; // si no existía, devuelve undefined
 }
 
 
