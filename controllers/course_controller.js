@@ -1,4 +1,4 @@
-const { findAll, findCourse, createCourse, updateCourse } = require("../services/course_service");
+const { findAll, findCourse, createCourse, updateCourse, deleteCourseById } = require("../services/course_service");
 const { getBody, getIdParam } = require("../routes/utils")
 const { isValidPostCourseData, isValidPutCourseData } = require("../routes/validators/courses")
 
@@ -53,14 +53,15 @@ async function postCourse(req, res) {
 
 async function putCourse(req, res) {
   try {
+    const id = getIdParam({req, basePath: "/courses"}); 
+
     const body = await getBody(req);
-    // console.log(body)
     const {is_valid, message} = isValidPutCourseData(body);
     if (!is_valid) {
       throw new Error(message);
     }
 
-    await updateCourse(body);
+    await updateCourse({id, data: body});
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ message: "Curso actualizado con éxito" }));
@@ -72,4 +73,20 @@ async function putCourse(req, res) {
   }
 }
 
-module.exports = { getCourses, getCourseById, postCourse, putCourse };
+async function deleteCourse(req, res) {
+  try {
+    const id = getIdParam({req, basePath: "/courses"}); 
+    
+    await deleteCourseById(id);
+
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Curso actualizado con éxito" }));
+  } catch (error) {
+    console.error("Error en putCourse:", error.message);
+
+    res.writeHead(400, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: error.message }));
+  }
+}
+
+module.exports = { getCourses, getCourseById, postCourse, putCourse, deleteCourse };
