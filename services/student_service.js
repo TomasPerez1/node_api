@@ -7,10 +7,10 @@ async function findAll() {
   return result.rows;
 }
 
-async function findCourse(id) {
+async function findStudent(id) {
 
   const query = `
-    SELECT * FROM courses
+    SELECT * FROM students
     WHERE id = $1
   `;
   const values = [id];
@@ -96,4 +96,4 @@ async function deleteCourseById(id) {
 
 
 
-module.exports = { findAll, findCourse, createStudent, updateCourse, deleteCourseById };
+module.exports = { findAll, findStudent, createStudent, updateCourse, deleteCourseById };

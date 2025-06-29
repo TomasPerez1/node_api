@@ -1,5 +1,5 @@
 const { getCourses, getCourseById, postCourse, putCourse, deleteCourse } = require("../controllers/course_controller.js");
-const { getStudents, postStudent } = require("../controllers/student_controller.js");
+const { getStudents, getStudentById, postStudent } = require("../controllers/student_controller.js");
 
 function router(req, res) {
   const path = req.pathname;
@@ -33,6 +33,20 @@ function router(req, res) {
     if (req.method === "POST") {
       return postStudent(req, res);
     }
+  }
+
+  if (path.startsWith("/students/")) {
+    if (req.method === "GET") {
+      return getStudentById(req, res);
+    }
+    
+    // if (req.method === "PUT") {
+    //   return putCourse(req, res);
+    // } 
+
+    // if (req.method === "DELETE") {
+    //   return deleteCourse(req, res);
+    // }
   }
 
   res.writeHead(404, { "Content-Type": "application/json" });

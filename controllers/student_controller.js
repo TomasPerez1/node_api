@@ -1,6 +1,6 @@
 const {
   findAll,
-  findCourse,
+  findStudent,
   createStudent,
   updateCourse,
   deleteCourseById,
@@ -21,22 +21,22 @@ async function getStudents(req, res) {
   }
 }
 
-// async function getCourseById(req, res) {
-//   try {
-//     const id = getIdParam({ req, basePath: "/courses" });
+async function getStudentById(req, res) {
+  try {
+    const id = getIdParam({ req, basePath: "/students" });
 
-//     const course = await findCourse(id);
+    const student = await findStudent(id);
 
-//     if (!course) {
-//       return sendJSON(res, 404, { error: "Course not found" });
-//     }
+    if (!student) {
+      return sendJSON(res, 404, { error: "Student not found" });
+    }
 
-//     sendJSON(res, 200, course);
-//   } catch (error) {
-//     console.error("Error getting course:", error);
-//     sendJSON(res, 500, { error: "Internal server error" });
-//   }
-// }
+    sendJSON(res, 200, student);
+  } catch (error) {
+    console.error("Error getting student:", error);
+    sendJSON(res, 500, { error: "Internal server error" });
+  }
+}
 
 async function postStudent(req, res) {
   try {
@@ -98,6 +98,6 @@ async function postStudent(req, res) {
 
 module.exports = {
   getStudents,
+  getStudentById,
   postStudent,
-  
 };
