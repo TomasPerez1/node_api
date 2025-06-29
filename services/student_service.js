@@ -35,13 +35,14 @@ async function createStudent({ name, email, age }) {
   
 }
 
-async function updateCourse({id, data}) {
-  
-    if(!isValidInt(id)) {
+async function updateStudent({id, data}) {
+    console.log("id recibiod: ", id)
+
+    if(!isValidInt({int: id, min: 1, max: 999})) {
       throw new Error("Invalide ID type");
     }
 
-    const { name, description, capacity } = data;
+    const { name, email, age } = data;
   
     const fields = [];
     const values = [];
@@ -52,18 +53,18 @@ async function updateCourse({id, data}) {
       values.push(name);
     }
   
-    if (description !== undefined) {
-      fields.push(`description = $${i++}`);
-      values.push(description);
+    if (email !== undefined) {
+      fields.push(`email = $${i++}`);
+      values.push(email);
     }
   
-    if (capacity !== undefined) {
-      fields.push(`capacity = $${i++}`);
-      values.push(capacity);
+    if (age !== undefined) {
+      fields.push(`age = $${i++}`);
+      values.push(age);
     }
   
     const query = `
-      UPDATE courses
+      UPDATE students
       SET ${fields.join(", ")}
       WHERE id = $${i}
       RETURNING *;
@@ -84,7 +85,7 @@ async function deleteCourseById(id) {
     RETURNING *;
     `;
 
-    if(!isValidInt(id)) {
+    if(!isValidInt({int: id, min: 1, max: 999})) {
       throw new Error("Invalide ID type");
     }
 
@@ -96,4 +97,4 @@ async function deleteCourseById(id) {
 
 
 
-module.exports = { findAll, findStudent, createStudent, updateCourse, deleteCourseById };
+module.exports = { findAll, findStudent, createStudent, updateStudent, deleteCourseById };

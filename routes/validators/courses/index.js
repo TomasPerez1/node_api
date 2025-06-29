@@ -4,7 +4,6 @@ function isValidPostCourseData(body) {
   const { name, description, capacity } = body;
 
   if (!isValidStr({str: name, min_length: 4, max_length: 20})) {
-    // estructurar el error
     return {is_valid: false, message: "invalid name"}
   }
   if (!isValidStr({str: description, min_length: 20, max_length: 120})) {
@@ -15,17 +14,13 @@ function isValidPostCourseData(body) {
   }
 
   return {is_valid: true, message: "ok"}
-
 }
 
 
 function isValidPutCourseData(body) {
-  
   const { name, description, capacity } = body;
-  console.log("is valid",name)
   
   if (name && !isValidStr({str: name, min_length: 4, max_length: 20})) {
-    // estructurar el error
     return {is_valid: false, message: "invalid name"}
   }
   if (description && !isValidStr({str: description, min_length: 20, max_length: 120})) {

@@ -37,7 +37,7 @@ async function createCourse({ name, description, capacity }) {
 
 async function updateCourse({id, data}) {
   
-    if(!isValidInt(id)) {
+    if(!isValidInt({int: id, min: 1, max: 999})) {
       throw new Error("Invalide ID type");
     }
 
@@ -84,7 +84,7 @@ async function deleteCourseById(id) {
     RETURNING *;
     `;
 
-    if(!isValidInt(id)) {
+    if(!isValidInt({int: id, min: 1, max: 999})) {
       throw new Error("Invalide ID type");
     }
 

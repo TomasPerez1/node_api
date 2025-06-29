@@ -12,10 +12,23 @@ function isValidPostStudentData(body) {
   if (!isValidInt({int: age, min: 18,  max: 90})) {
     return {is_valid: false, message: "invalid age"}
   }
-
   return {is_valid: true, message: "ok"}
-
 }
 
+function isValidPutStudentData(body) {
+  const { name, email, age } = body;
+  console.log(body)
+  if (name && !isValidStr({str: name, min_length: 3, max_length: 20})) {
+    return {is_valid: false, message: "invalid name"}
+  }
+  if (email && !isValidEmail({email: email})) {
+    return {is_valid: false, message: "invalid email"}
+  }
+  if (age && !isValidInt({int: age, min: 18,  max: 90})) {
+    return {is_valid: false, message: "invalid age"}
+  }
 
-module.exports = { isValidPostStudentData, /* isValidPutCourseData */ }
+  return {is_valid: true, message: "ok"}
+}
+
+module.exports = { isValidPostStudentData, isValidPutStudentData }
