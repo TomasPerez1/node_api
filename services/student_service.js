@@ -78,9 +78,9 @@ async function updateStudent({id, data}) {
   
 }
 
-async function deleteCourseById(id) {
+async function deleteStudentById(id) {
     const query = `
-    DELETE FROM courses
+    DELETE FROM students
     WHERE id = $1
     RETURNING *;
     `;
@@ -92,9 +92,9 @@ async function deleteCourseById(id) {
     const values = [id];
 
     const result = await db.query(query, values);
-    return result.rows[0]; // si no existía, devuelve undefined
+    return result.rows[0];
 }
 
 
 
-module.exports = { findAll, findStudent, createStudent, updateStudent, deleteCourseById };
+module.exports = { findAll, findStudent, createStudent, updateStudent, deleteStudentById };

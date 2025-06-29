@@ -40,7 +40,7 @@ function router(req, res) {
   const segments = req.pathname.split("/").filter(Boolean); 
   const method = req.method;
 
-  const [resource, id] = segments;
+  const [resource/* , id */] = segments;
 
   // Ej: /courses
   if (segments.length === 1 && routes[resource]?.[method]) {

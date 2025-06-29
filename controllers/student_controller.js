@@ -3,7 +3,7 @@ const {
   findStudent,
   createStudent,
   updateStudent,
-  deleteCourseById,
+  deleteStudentById,
 } = require("../services/student_service");
 const { sendJSON, getBody, getIdParam } = require("../routes/utils");
 const {
@@ -79,26 +79,27 @@ async function putStudent(req, res) {
   }
 }
 
-// async function deleteCourse(req, res) {
-//   try {
-//     const id = getIdParam({ req, basePath: "/courses" });
+async function deleteStudent(req, res) {
+  try {
+    const id = getIdParam({ req, basePath: "/students" });
 
-//     const deleted = await deleteCourseById(id);
+    const deleted = await deleteStudentById(id);
 
-//     if (!deleted) {
-//       return sendJSON(res, 404, { error: "Course not found" });
-//     }
+    if (!deleted) {
+      return sendJSON(res, 404, { error: "Student not found" });
+    }
 
-//     sendJSON(res, 200, { message: "Curso eliminado con éxito" });
-//   } catch (error) {
-//     console.error("Error en deleteCourse:", error.message);
-//     sendJSON(res, 400, { error: error.message });
-//   }
-// }
+    sendJSON(res, 200, { message: "Student eliminado con éxito" });
+  } catch (error) {
+    console.error("Error en deleteStudent:", error.message);
+    sendJSON(res, 400, { error: error.message });
+  }
+}
 
 module.exports = {
   getStudents,
   getStudentById,
   postStudent,
   putStudent,
+  deleteStudent,
 };
