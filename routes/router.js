@@ -1,20 +1,7 @@
-const {
-  getCourses,
-  getCourseById,
-  postCourse,
-  putCourse,
-  deleteCourse,
-} = require("../controllers/course_controller.js");
+const { getCourses, getCourseById, postCourse, putCourse, deleteCourse } = require("../controllers/course_controller.js");
+const { getStudents,  getStudentById,  postStudent,  putStudent,  deleteStudent } = require("../controllers/student_controller.js");
+const { postInscription } = require("../controllers/inscriptions_controller.js");
 
-const {
-  getStudents,
-  getStudentById,
-  postStudent,
-  putStudent,
-  deleteStudent,
-} = require("../controllers/student_controller.js");
-
-// Mapeo de rutas dinámicas
 const routes = {
   courses: {
     GET: getCourses,
@@ -28,6 +15,15 @@ const routes = {
   students: {
     GET: getStudents,
     POST: postStudent,
+    ID: {
+      GET: getStudentById,
+      PUT: putStudent,
+      DELETE: deleteStudent,
+    },
+  },
+  inscriptions: {
+    GET: getStudents,
+    POST: postInscription,
     ID: {
       GET: getStudentById,
       PUT: putStudent,
