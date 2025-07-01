@@ -1,4 +1,5 @@
 const db = require("../db");
+const bcrypt = require("bcryptjs")
 const { isValidInt } = require("../utils");
 
 async function findAll() {
@@ -7,7 +8,7 @@ async function findAll() {
   return result.rows;
 }
 
-async function findStudent(id) {
+async function findUser(id) {
 
   const query = `
     SELECT * FROM users
@@ -22,13 +23,17 @@ async function findStudent(id) {
 }
 
 
-async function createStudent({ name, email, age }) {
+async function createUser({ name, email, password }) {
+  
   const query = `
-    INSERT INTO users (name, email, age)
-    VALUES ($1, $2, $3)
-    RETURNING *;
+    INSERT INTO users (name, email, password, role)
+    VALUES ($1, $2, $3, $4)
+    RETURNING id, name, email, role;
   `;
-  const values = [name, email, age];
+
+  const hashedPassword = bcrypt.hashSync(password, 10);
+
+  const values = [name, email, hashedPassword, "user"];
 
   const result = await db.query(query, values);
   return result.rows[0];
@@ -97,4 +102,4 @@ async function deleteStudentById(id) {
 
 
 
-module.exports = { findAll, findStudent, createStudent, updateStudent, deleteStudentById };
+module.exports = { findAll, findUser, createUser, updateStudent, deleteStudentById };

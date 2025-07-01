@@ -1,15 +1,15 @@
 const {
   findAll,
-  findStudent,
-  createStudent,
+  findUser,
+  createUser,
   updateStudent,
   deleteStudentById,
 } = require("../services/user_service");
 const { sendJSON, getBody, getIdParam } = require("../routes/utils");
 const {
-  isValidPostStudentData,
-  isValidPutStudentData
-} = require("../routes/validators/students");
+  isValidPostUserData,
+  // isValidPutStudentData
+} = require("../routes/validators/users");
 
 async function getUsers(req, res) {
   try {
@@ -21,33 +21,33 @@ async function getUsers(req, res) {
   }
 }
 
-async function getStudentById(req, res) {
+async function getUserById(req, res) {
   try {
     const id = getIdParam({ req, basePath: "/users" });
 
-    const student = await findStudent(id);
+    const user = await findUser(id);
 
-    if (!student) {
-      return sendJSON(res, 404, { error: "Student not found" });
+    if (!user) {
+      return sendJSON(res, 404, { error: "User not found" });
     }
 
-    sendJSON(res, 200, student);
+    sendJSON(res, 200, user);
   } catch (error) {
     console.error("Error getting users:", error);
     sendJSON(res, 500, { error: "Internal server error" });
   }
 }
 
-async function postStudent(req, res) {
+async function postUser(req, res) {
   try {
     const body = await getBody(req);
 
-    const { is_valid, message } = isValidPostStudentData(body);
+    const { is_valid, message } = isValidPostUserData(body);
     if (!is_valid) {
       throw new Error(message);
     }
 
-    await createStudent(body);
+    await createUser(body);
 
     sendJSON(res, 201, { message: "user creado con éxito" });
   } catch (error) {
@@ -98,8 +98,8 @@ async function deleteStudent(req, res) {
 
 module.exports = {
   getUsers,
-  // getUserById,
-  // postUser,
+  getUserById,
+  postUser,
   // putUser,
   // deleteUser,
 };
