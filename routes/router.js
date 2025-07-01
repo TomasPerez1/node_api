@@ -2,6 +2,7 @@ const { getCourses, getCourseById, postCourse, putCourse, deleteCourse } = requi
 const { getStudents,  getStudentById,  postStudent,  putStudent,  deleteStudent } = require("../controllers/student_controller.js");
 const { getInscriptions, postInscription, getInscriptionById, deleteInscription } = require("../controllers/inscriptions_controller.js");
 const { getReportByType } = require("../controllers/report_controller.js");
+const { getUsers } = require("../controllers/user_controller.js");
 
 const routes = {
   courses: {
@@ -29,6 +30,15 @@ const routes = {
       GET: getInscriptionById,
       DELETE: deleteInscription,
     },
+  },
+  users: {
+    GET: getUsers,
+    // POST: postUser,
+    // ID: {
+    //   GET: getUserById,
+    //   PUT: putUser,
+    //   DELETE: deleteUser,
+    // },
   },
   reports: {
     GET: getReportByType,
