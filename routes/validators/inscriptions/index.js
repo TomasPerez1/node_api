@@ -1,29 +1,28 @@
-// const { isValidId, hasCapacity, isAlreadyInscripted } = require("../../../services/inscription_service");
+const { isValidId, hasCapacity, isAlreadyInscripted } = require("../../../services/inscription_service");
 
 
 async function isValidPostInscriptionData(body) {
-  console.log("INSCRIPTION BODYYY", body)
-  const { student_id, course_id } = body;
-  console.log("....")
-  console.log(student_id, course_id)
+  const { student_id, course_id } = body
 
   //1. Chequear que student_id y el course_id son correctos
-  // const isValidStudent = await isValidId({table: "students", id: student_id});
-  // const isValidCourse = await isValidId({table: "courses", id: course_id});
+  const isValidStudent = await isValidId({table: "students", id: student_id});
+  const isValidCourse = await isValidId({table: "courses", id: course_id});
 
-  // if(!isValidStudent || !isValidCourse) {
-  //   return {is_valid: false, message: "invalid ID credentials"}
-  // }
+  if(!isValidStudent || !isValidCourse) {
+    return {is_valid: false, message: "invalid ID credentials"}
+  }
 
-  // //2. Chequear si existe la inscription
-  // if(!isAlreadyInscripted()) {
-  //   return {is_valid: false, message: "The Student is already inscripted"}
-  // }
+  //2. Chequear si existe la inscription
+  const isInscripted = await isAlreadyInscripted(body);
+  if(isInscripted) {
+    return {is_valid: false, message: "The Student is already inscripted"}
+  }
   
-  // //3. Chequear si hay capacidad en el curso
-  // if(!hasCapacity({course_id})) {
-  //   return {is_valid: false, message: "The Course has no more capacity"}
-  // }
+  //3. Chequear si hay capacidad en el curso
+  const capacity = await hasCapacity({course_id});
+  if(!capacity) {
+    return {is_valid: false, message: "The Course has no more capacity"}
+  }
 
   return {is_valid: true, message: "ok"}
 }

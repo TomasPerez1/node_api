@@ -1,5 +1,5 @@
 const db = require("../db");
-const { isValidInt } = require("../utils");
+// const { isValidInt } = require("../utils");
 
 async function isValidId({table, id}) {
   const query = `
@@ -9,36 +9,31 @@ async function isValidId({table, id}) {
   const values = [id];
 
   const result = await db.query(query, values);
-  // console.log("RESULT", result.rows[0])
-  // console.log("boolean: ", Boolean(result.rows[0]))
   return Boolean(result.rows[0]); 
-  
 }
 
 async function isAlreadyInscripted({ student_id, course_id }) {
-  return false
-  // const query = `
-  //   SELECT * FROM inscriptions
-  //   WHERE student_id = $1 AND course_id = $2
-  // `;
-  // const values = [student_id, course_id];
+  const query = `
+    SELECT * FROM inscriptions
+    WHERE student_id = $1 AND course_id = $2
+  `;
+  const values = [student_id, course_id];
 
-  // const result = await db.query(query, values);
+  const result = await db.query(query, values);
   
-  // return Boolean(result.rows[0]); 
+  return Boolean(result.rows[0]); 
 }
 
 async function hasCapacity({ course_id }) {
-  return true;
-  // const query = `
-  //   SELECT * FROM courses
-  //   WHERE id = $1 AND capacity > 0; 
-  // `;
-  // const values = [course_id];
+  const query = `
+    SELECT * FROM courses
+    WHERE id = $1 AND capacity > 0;
+  `; // cpacity = 0;
+  const values = [course_id];
 
-  // const result = await db.query(query, values);
-  // console.log("HAS", result.rows[0]);
-  // return Boolean(result.rows[0]); 
+  const result = await db.query(query, values);
+  console.log("HAS", result.rows[0]);
+  return Boolean(result.rows[0]); 
 }
 
 // async function findAll() {
