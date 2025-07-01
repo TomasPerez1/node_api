@@ -1,6 +1,6 @@
 const { getCourses, getCourseById, postCourse, putCourse, deleteCourse } = require("../controllers/course_controller.js");
 const { getStudents,  getStudentById,  postStudent,  putStudent,  deleteStudent } = require("../controllers/student_controller.js");
-const { postInscription } = require("../controllers/inscriptions_controller.js");
+const { getInscriptions, postInscription, getInscriptionById, deleteInscription } = require("../controllers/inscriptions_controller.js");
 
 const routes = {
   courses: {
@@ -22,12 +22,11 @@ const routes = {
     },
   },
   inscriptions: {
-    GET: getStudents,
+    GET: getInscriptions,
     POST: postInscription,
     ID: {
-      GET: getStudentById,
-      PUT: putStudent,
-      DELETE: deleteStudent,
+      GET: getInscriptionById,
+      DELETE: deleteInscription,
     },
   },
 };

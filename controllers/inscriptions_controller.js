@@ -1,33 +1,33 @@
 const { sendJSON, getBody, getIdParam } = require("../routes/utils");
 const { isValidPostInscriptionData } = require("../routes/validators/inscriptions");
-const { createInscription } = require("../services/inscription_service");
+const { createInscription, findAll, findInscription, deleteInscriptionsById } = require("../services/inscription_service");
 
-// async function getStudents(req, res) {
-//   try {
-//     const students = await findAll();
-//     sendJSON(res, 200, students);
-//   } catch (error) {
-//     console.error("Error getting courses:", error);
-//     sendJSON(res, 500, { error: "Internal server error" });
-//   }
-// }
+async function getInscriptions(req, res) {
+  try {
+    const students = await findAll();
+    sendJSON(res, 200, students);
+  } catch (error) {
+    console.error("Error getting inscriptions:", error);
+    sendJSON(res, 500, { error: "Internal server error" });
+  }
+}
 
-// async function getStudentById(req, res) {
-//   try {
-//     const id = getIdParam({ req, basePath: "/students" });
+async function getInscriptionById(req, res) {
+  try {
+    const id = getIdParam({ req, basePath: "/inscriptions" });
 
-//     const student = await findStudent(id);
+    const inscription = await findInscription(id);
 
-//     if (!student) {
-//       return sendJSON(res, 404, { error: "Student not found" });
-//     }
+    if (!inscription) {
+      return sendJSON(res, 404, { error: "Inscription not found" });
+    }
 
-//     sendJSON(res, 200, student);
-//   } catch (error) {
-//     console.error("Error getting student:", error);
-//     sendJSON(res, 500, { error: "Internal server error" });
-//   }
-// }
+    sendJSON(res, 200, inscription);
+  } catch (error) {
+    console.error("Error getting Inscription:", error);
+    sendJSON(res, 500, { error: "Internal server error" });
+  }
+}
 
 async function postInscription(req, res) {
   try {
@@ -47,50 +47,26 @@ async function postInscription(req, res) {
   }
 }
 
-// async function putStudent(req, res) {
-//   try {
-//     const id = getIdParam({ req, basePath: "/students" });
+async function deleteInscription(req, res) {
+  try {
+    const id = getIdParam({ req, basePath: "/inscriptions" });
 
-//     const body = await getBody(req);
-//     const { is_valid, message } = isValidPutStudentData(body);
-//     if (!is_valid) {
-//       throw new Error(message);
-//     }
+    const deleted = await deleteInscriptionsById(id);
 
-//     const updated = await updateStudent({ id, data: body });
+    if (!deleted) {
+      return sendJSON(res, 404, { error: "Inscription not found" });
+    }
 
-//     if (!updated) {
-//       return sendJSON(res, 404, { error: "Student not found" });
-//     }
-
-//     sendJSON(res, 200, { message: "Student actualizado con éxito" });
-//   } catch (error) {
-//     console.error("Error en putStudent:", error.message);
-//     sendJSON(res, 400, { error: error.message });
-//   }
-// }
-
-// async function deleteStudent(req, res) {
-//   try {
-//     const id = getIdParam({ req, basePath: "/students" });
-
-//     const deleted = await deleteStudentById(id);
-
-//     if (!deleted) {
-//       return sendJSON(res, 404, { error: "Student not found" });
-//     }
-
-//     sendJSON(res, 200, { message: "Student eliminado con éxito" });
-//   } catch (error) {
-//     console.error("Error en deleteStudent:", error.message);
-//     sendJSON(res, 400, { error: error.message });
-//   }
-// }
+    sendJSON(res, 200, { message: "Inscripcion eliminado con éxito" });
+  } catch (error) {
+    console.error("Error en deleteInscripcion:", error.message);
+    sendJSON(res, 400, { error: error.message });
+  }
+}
 
 module.exports = {
   postInscription,
-  // getStudents,
-  // getStudentById,
-  // putStudent,
-  // deleteStudent,
+  getInscriptions,  
+  getInscriptionById,
+  deleteInscription
 };

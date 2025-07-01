@@ -1,5 +1,5 @@
 const db = require("../db");
-// const { isValidInt } = require("../utils");
+const { isValidInt } = require("../utils");
 
 async function isValidId({table, id}) {
   const query = `
@@ -36,25 +36,25 @@ async function hasCapacity({ course_id }) {
   return Boolean(result.rows[0]); 
 }
 
-// async function findAll() {
-//   const query = "SELECT * FROM students ORDER BY id ASC";
-//   const result = await db.query(query);
-//   return result.rows;
-// }
+async function findAll() {
+  const query = "SELECT * FROM inscriptions ORDER BY id ASC";
+  const result = await db.query(query);
+  return result.rows;
+}
 
-// async function findStudent(id) {
+async function findInscription(id) {
 
-//   const query = `
-//     SELECT * FROM students
-//     WHERE id = $1
-//   `;
-//   const values = [id];
+  const query = `
+    SELECT * FROM inscriptions
+    WHERE id = $1
+  `;
+  const values = [id];
 
-//   const result = await db.query(query, values);
+  const result = await db.query(query, values);
   
-//   return result.rows[0]; 
+  return result.rows[0]; 
   
-// }
+}
 
 
 async function createInscription({ student_id, course_id }) {
@@ -71,66 +71,23 @@ async function createInscription({ student_id, course_id }) {
   
 }
 
-// async function updateStudent({id, data}) {
-//     console.log("id recibiod: ", id)
+async function deleteInscriptionsById(id) {
+    const query = `
+    DELETE FROM inscriptions
+    WHERE id = $1
+    RETURNING *;
+    `;
 
-//     if(!isValidInt({int: id, min: 1, max: 999})) {
-//       throw new Error("Invalide ID type");
-//     }
+    if(!isValidInt({int: id, min: 1, max: 999})) {
+      throw new Error("Invalide ID type");
+    }
 
-//     const { name, email, age } = data;
-  
-//     const fields = [];
-//     const values = [];
-//     let i = 1;
-  
-//     if (name !== undefined) {
-//       fields.push(`name = $${i++}`);
-//       values.push(name);
-//     }
-  
-//     if (email !== undefined) {
-//       fields.push(`email = $${i++}`);
-//       values.push(email);
-//     }
-  
-//     if (age !== undefined) {
-//       fields.push(`age = $${i++}`);
-//       values.push(age);
-//     }
-  
-//     const query = `
-//       UPDATE students
-//       SET ${fields.join(", ")}
-//       WHERE id = $${i}
-//       RETURNING *;
-//     `;
-  
-//     values.push(id);
-  
-//     const result = await db.query(query, values);
-//     return result.rows[0];
-    
-  
-// }
+    const values = [id];
 
-// async function deleteStudentById(id) {
-//     const query = `
-//     DELETE FROM students
-//     WHERE id = $1
-//     RETURNING *;
-//     `;
-
-//     if(!isValidInt({int: id, min: 1, max: 999})) {
-//       throw new Error("Invalide ID type");
-//     }
-
-//     const values = [id];
-
-//     const result = await db.query(query, values);
-//     return result.rows[0];
-// }
+    const result = await db.query(query, values);
+    return result.rows[0];
+}
 
 
 
-module.exports = { isValidId, isAlreadyInscripted, hasCapacity, createInscription};
+module.exports = { findAll, findInscription, deleteInscriptionsById, isValidId, isAlreadyInscripted, hasCapacity, createInscription};
