@@ -1,4 +1,4 @@
-const { getCoursesWithIncriptions } = require("../services/reports_service");
+const { getCoursesWithIncriptions, getFullCoursesReport, getEmptyCoursesReport, getPopularCoursesReport } = require("../services/reports_service");
 const { sendJSON, getBody, getIdParam } = require("../routes/utils");
 
 
@@ -9,11 +9,18 @@ async function getReportByType(type, req, res) {
         const data = await getCoursesWithIncriptions();
         return sendJSON(res, 200, data);
       }
-
-      // futuros reportes:
-      // case "students":
-      //   return ...
-
+      case "full-courses": {
+        const data = await getFullCoursesReport();
+        return sendJSON(res, 200, data);
+      }
+      case "empty-courses": {
+        const data = await getEmptyCoursesReport();
+        return sendJSON(res, 200, data);
+      }
+      case "popular-courses": {
+        const data = await getPopularCoursesReport();
+        return sendJSON(res, 200, data);
+      }
       default:
         return sendJSON(res, 404, { error: `Report '${type}' not found` });
     }

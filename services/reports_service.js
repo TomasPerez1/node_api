@@ -21,94 +21,66 @@ async function getCoursesWithIncriptions() {
   return result.rows;
 }
 
-
-async function findCourse(id) {
-
+async function getFullCoursesReport() {
   const query = `
-    SELECT * FROM courses
-    WHERE id = $1
+    SELECT
+      c.id,
+      c.name,
+      c.capacity,
+      COUNT(i.id)::INT AS amount_of_inscriptions,
+      ROUND(
+        (COUNT(i.id)::DECIMAL / c.capacity) * 100
+      )::INT AS percentage_occupancy
+    FROM courses c
+    LEFT JOIN inscriptions i ON c.id = i.course_id
+    GROUP BY c.id
+    HAVING COUNT(i.id) >= c.capacity
+    ORDER BY c.id;
   `;
-  const values = [id];
 
-  const result = await db.query(query, values);
-  
-  return result.rows[0]; 
-  
+  const result = await db.query(query);
+  return result.rows;
 }
 
-
-async function createCourse({ name, description, capacity }) {
+async function getEmptyCoursesReport() {
   const query = `
-    INSERT INTO courses (name, description, capacity)
-    VALUES ($1, $2, $3)
-    RETURNING *;
+    SELECT
+      c.id,
+      c.name,
+      c.capacity,
+      COUNT(i.id)::INT AS amount_of_inscriptions,
+      ROUND(
+        (COUNT(i.id)::DECIMAL / c.capacity) * 100
+      )::INT AS percentage_occupancy
+    FROM courses c
+    LEFT JOIN inscriptions i ON c.id = i.course_id
+    GROUP BY c.id
+    HAVING COUNT(i.id) = 0
+    ORDER BY c.id;
   `;
-  const values = [name, description || null, capacity];
 
-  const result = await db.query(query, values);
-  return result.rows[0];
-  
+  const result = await db.query(query);
+  return result.rows;
 }
 
-async function updateCourse({id, data}) {
-  
-    if(!isValidInt({int: id, min: 1, max: 999})) {
-      throw new Error("Invalide ID type");
-    }
+async function getPopularCoursesReport() {
+  const query = `
+    SELECT
+      c.id,
+      c.name,
+      c.capacity,
+      COUNT(i.id)::INT AS amount_of_inscriptions,
+      ROUND(COUNT(i.id) * 100.0 / c.capacity)::INT AS percentage_occupancy
+    FROM courses c
+    LEFT JOIN inscriptions i ON c.id = i.course_id
+    GROUP BY c.id
+    ORDER BY COUNT(i.id) DESC
+    LIMIT 1;
+  `;
 
-    const { name, description, capacity } = data;
-  
-    const fields = [];
-    const values = [];
-    let i = 1;
-  
-    if (name !== undefined) {
-      fields.push(`name = $${i++}`);
-      values.push(name);
-    }
-  
-    if (description !== undefined) {
-      fields.push(`description = $${i++}`);
-      values.push(description);
-    }
-  
-    if (capacity !== undefined) {
-      fields.push(`capacity = $${i++}`);
-      values.push(capacity);
-    }
-  
-    const query = `
-      UPDATE courses
-      SET ${fields.join(", ")}
-      WHERE id = $${i}
-      RETURNING *;
-    `;
-  
-    values.push(id);
-  
-    const result = await db.query(query, values);
-    return result.rows[0];
-    
-  
-}
-
-async function deleteCourseById(id) {
-    const query = `
-    DELETE FROM courses
-    WHERE id = $1
-    RETURNING *;
-    `;
-
-    if(!isValidInt({int: id, min: 1, max: 999})) {
-      throw new Error("Invalide ID type");
-    }
-
-    const values = [id];
-
-    const result = await db.query(query, values);
-    return result.rows[0]; // si no existía, devuelve undefined
+  const result = await db.query(query);
+  return result.rows;
 }
 
 
-
-module.exports = { getCoursesWithIncriptions, findCourse, createCourse, updateCourse, deleteCourseById };
+module.exports = { getCoursesWithIncriptions, getFullCoursesReport, getEmptyCoursesReport, getPopularCoursesReport };

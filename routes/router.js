@@ -32,11 +32,6 @@ const routes = {
   },
   reports: {
     GET: getReportByType,
-    // POST: postReport,
-    // ID: {
-    //   GET: getReportById,
-    //   DELETE: deleteReport,
-    // },
   },
 };
 
